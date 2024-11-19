@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Hack Shop</title>
+  <style>
+    /* Allgemeine Einstellungen */
+    body {
+      margin: 0;
+      font-family: 'Courier New', monospace;
+      background: #1e1e1e;
+      color: #d4ffd1;
+      overflow-x: hidden;
+    }
+
+    /* Navigation */
+    nav {
+      position: sticky;
+      top: 0;
+      background: #111;
+      padding: 15px 0;
+      z-index: 1000;
+      text-align: center;
+      box-shadow: 0 4px 2px -2px gray;
+    }
+
+    nav a {
+      margin: 0 20px;
+      text-decoration: none;
+      color: #00ff00;
+      font-size: 1.2rem;
+      transition: color 0.3s ease;
+    }
+
+    nav a:hover {
+      color: #ffbf00;
+      text-decoration: underline;
+    }
+
+    /* Sektion Layout */
+    section {
+      padding: 50px 20px;
+      text-align: center;
+      animation: fadeIn 1s ease-out;
+    }
+
+    /* Coole Überschrift Animation mit dynamischem, animiertem Rahmen */
+    h1 {
+      margin-bottom: 30px;
+      font-weight: bold;
+      color: #00ff00;
+      font-size: 4rem;
+      position: relative;
+      display: inline-block;
+      text-transform: uppercase;
+      letter-spacing: 5px;
+      animation: titleAnimation 3s ease-in-out infinite alternate;
+    }
+
+    h1::before, h1::after {
+      content: '';
+      position: absolute;
+      width: 100%;
+      height: 5px;
+      background: #00ff00;
+      animation: borderAnimation 1.5s infinite alternate;
+      top: 0;
+      left: 0;
+    }
+
+    h1::after {
+      top: auto;
+      bottom: 0;
+    }
+
+    /* Dynamische Animation des Rahmens */
+    @keyframes borderAnimation {
+      0% {
+        transform: scaleX(0);
+        transform-origin: bottom right;
+      }
+      50% {
+        transform: scaleX(1);
+        transform-origin: top left;
+      }
+      100% {
+        transform: scaleX(0);
+        transform-origin: top right;
+      }
+    }
+
+    /* Coole Titelanimation */
+    @keyframes titleAnimation {
+      0% {
+        transform: translateY(-20px);
+        opacity: 0;
+      }
+      50% {
+        transform: translateY(0);
+        opacity: 1;
+      }
+      100% {
+        transform: translateY(-20px);
+        opacity: 0.7;
+      }
+    }
+
+    /* Info-Box */
+    .info-box, .device-box, .module-container {
+      margin: 20px auto;
+      max-width: 1200px;
+      padding: 30px;
+      background: rgba(0, 0, 0, 0.8);
+      border-radius: 10px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.7);
+      text-align: left;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .info-box:hover, .device-box:hover {
+      transform: scale(1.05);
+      box-shadow: 0 6px 20px rgba(0, 255, 0, 0.7);
+    }
+
+    /* Module Cards */
+    .module-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+      gap: 20px;
+      margin-top: 40px;
+    }
+
+    .card {
+      background: rgba(0, 0, 0, 0.9);
+      border: 2px solid #00ff00;
+      border-radius: 10px;
+      padding: 20px;
+      text-align: center;
+      transition: transform 0.3s ease, box-shadow 0.3s ease, background-color 0.3s ease;
+      cursor: pointer;
+    }
+
+    .card:hover {
+      transform: translateY(-10px);
+      box-shadow: 0 10px 20px rgba(0, 255, 0, 0.6);
+      background-color: rgba(0, 255, 0, 0.1);
+    }
+
+    .card h3 {
+      margin-bottom: 10px;
+      color: #00ff00;
+      font-size: 1.5rem;
+    }
+
+    .card p {
+      margin-bottom: 15px;
+      color: #b3ffb3;
+    }
+
+    /* Jetzt kaufen Button */
+    .card a {
+      text-decoration: none;
+      background: #00ff00;
+      padding: 10px 20px;
+      border-radius: 5px;
+      color: black;
+      font-weight: bold;
+      transition: background-color 0.3s ease, transform 0.3s ease;
+    }
+
+    .card a:hover {
+      background-color: #00cc00;
+      transform: scale(1.1);
+    }
+
+    /* Hintergrund Matrix */
+    canvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      z-index: -1;
+    }
+
+    /* Responsive Layout */
+    @media screen and (max-width: 768px) {
+      nav a {
+        font-size: 1rem;
+      }
+    }
+
+    /* Fade-In Effekt */
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+      }
+      to {
+        opacity: 1;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Matrix Hintergrund -->
+  <canvas id="matrix"></canvas>
+
+  <!-- Navigation -->
+  <nav>
+    <a href="#flipper-zero">Flipper Zero</a>
+    <a href="#modules">Module</a>
+    <a href="#hacking-devices">Hacking Devices</a>
+  </nav>
+
+  <!-- Hack Shop Sektion -->
+  <section id="flipper-zero">
+    <h1>Hack Shop</h1>
+    <div class="info-box">
+      <h2>Was ist der Hack Shop?</h2>
+      <p>
+        Willkommen im Hack Shop! Hier findest du die neuesten Tools und Geräte für Hacker, Sicherheitsforscher und Technik-Enthusiasten. 
+        Vom Flipper Zero bis zu erweiterten Modulen und Zubehör – alles, was du für deine Projekte benötigst.
+      </p>
+    </div>
+  </section>
+
+  <!-- Module Sektion -->
+  <section id="modules">
+    <h2>Module und Zubehör für Flipper Zero</h2>
+    <div class="module-container">
+      <!-- Module 1 -->
+      <div class="card">
+        <h3>Wi-Fi Devboard</h3>
+        <p>Erweitere deinen Flipper Zero mit Wi-Fi-Funktionen für drahtlose Netzwerk-Analyse.</p>
+        <a href="https://shop.flipperzero.one/" target="_blank">Jetzt kaufen</a>
+      </div>
+
+      <!-- Module 2 -->
+      <div class="card">
+        <h3>Sub-GHz Antenne</h3>
+        <p>Erhöhe die Reichweite deiner Sub-GHz-Funkverbindungen mit dieser spezialisierten Antenne.</p>
+        <a href="https://lab401.com/" target="_blank">Jetzt kaufen</a>
+      </div>
+
+      <!-- Module 3 -->
+      <div class="card">
+        <h3>Bluetooth-Modul</h3>
+        <p>Füge BLE-Scanning und drahtlose Kommunikation zu deinem Flipper Zero hinzu.</p>
+        <a href="https://lab401.com/" target="_blank">Jetzt kaufen</a>
+      </div>
+
+      <!-- Weitere Module... -->
+      <div class="card">
+        <h3>Raspberry Pi Zero Hat</h3>
+        <p>Nutze den Flipper Zero als Erweiterung für deinen Raspberry Pi Zero und baue fortgeschrittene Projekte.</p>
+        <a href="https://shop.pi-supply.com/" target="_blank">Jetzt kaufen</a>
+      </div>
+
+      <div class="card">
+        <h3>IR Extender</h3>
+        <p>Vergrößere die Reichweite des IR-Senders für Gerätesteuerungen und -analysen.</p>
+        <a href="https://lab401.com/" target="_blank">Jetzt kaufen</a>
+      </div>
+
+      <div class="card">
+        <h3>Flipper Zero Screen Protector</h3>
+        <p>Schütze das Display deines Flipper Zero mit diesem speziellen Screen Protector.</p>
+        <a href="https://flipperzero.one/" target="_blank">Jetzt kaufen</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Weitere Hacking Geräte -->
+  <section id="hacking-devices">
+    <h2>Andere Hacking Geräte</h2>
+    <div class="module-container">
+      <!-- Weitere Geräte... -->
+      <div class="card">
+        <h3>Bus Pirate</h3>
+        <p>Ein vielseitiges Programmiergerät für die Kommunikation mit verschiedenen digitalen Protokollen.</p>
+        <a href="https://dangerousprototypes.com/docs/Bus_Pirate" target="_blank">Jetzt kaufen</a>
+      </div>
+
+      <div class="card">
+        <h3>HackRF One</h3>
+        <p>Ein Software Defined Radio, mit dem du Signale in einem breiten Frequenzbereich empfangen und senden kannst.</p>
+        <a href="https://greatscottgadgets.com/hackrf/" target="_blank">Jetzt kaufen</a>
+      </div>
+
+      <div class="card">
+        <h3>Yardstick One</h3>
+        <p>Ein weiteres Software Defined Radio für die Analyse von 300-348 MHz und 390-464 MHz Signalen.</p>
+        <a href="https://www.lazysoft.cc/yardstickone/" target="_blank">Jetzt kaufen</a>
+      </div>
+
+      <div class="card">
+        <h3>RTL-SDR USB Stick</h3>
+        <p>Ein günstiger USB SDR Empfänger, um Radiowellen zu empfangen und zu analysieren.</p>
+        <a href="https://www.rtl-sdr.com/" target="_blank">Jetzt kaufen</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- JavaScript für Matrix Hintergrund -->
+  <script>
+    const canvas = document.getElementById('matrix');
+    const ctx = canvas.getContext('2d');
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+    const letters = Array(256).fill(0);
+    const fontSize = 16;
+
+    function drawMatrix() {
+      ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+      ctx.fillStyle = '#00ff00';
+      ctx.font = `${fontSize}px monospace`;
+
+      letters.forEach((y, i) => {
+        const text = String.fromCharCode(0x30A0 + Math.random() * 96);
+        ctx.fillText(text, i * fontSize, y);
+
+        if (y > canvas.height && Math.random() > 0.975) {
+          letters[i] = 0;
+        }
+        letters[i] += fontSize;
+      });
+    }
+
+    setInterval(drawMatrix, 50);
+    window.addEventListener('resize', () => {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    });
+  </script>
+</body>
+</html>
